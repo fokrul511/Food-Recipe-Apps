@@ -83,11 +83,7 @@ class _HomeState extends State<Home> {
       var deocdedBody = jsonDecode(response.body);
       var list = deocdedBody['categories'];
       for (var item in list) {
-        Meal meal = Meal(
-          strCategory: item['strCategory'],
-          strCategoryThumb: item['strCategoryThumb'],
-          strCategoryDescription: item['strCategoryDescription'],
-        );
+        Meal meal = Meal.fromJson(item);
         mealList.add(meal);
       }
       isLoding = false;

@@ -10,4 +10,10 @@ class Meal {
     this.strCategoryThumb,
     this.strCategoryDescription,
   });
+
+  Meal.fromJson(Map<String, dynamic> json) {
+    strCategory = json['strCategory'];
+    strCategoryThumb = json['strCategoryThumb'];
+    strCategoryDescription = json['strCategoryDescription'];
+  }
 }
