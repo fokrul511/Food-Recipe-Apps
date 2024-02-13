@@ -1,30 +1,28 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:food_recipe/views/widget/recipe_cart.dart';
+import 'package:food_recipe/views/widget/show_meal_info.dart';
+import 'package:http/http.dart';
 
-import '../../model/recipe.dart';
-import '../../model/recipe_api.dart';
+import '../../model/data.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class Home extends StatefulWidget {
+  const Home({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<Home> createState() => _HomeState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  late List<Recipe> _recipes = [];
-  bool _isLoading = true;
+List<Meal> mealList = [];
+
+class _HomeState extends State<Home> {
+  bool isLoding = false;
 
   @override
   void initState() {
+    getData();
     super.initState();
-    getRecipes();
-  }
-
-  Future<void> getRecipes() async {
-    _recipes = await RecipeApi.getRecipe();
-    _isLoading = false;
-    setState(() {});
   }
 
   @override
@@ -36,22 +34,65 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Icon(Icons.restaurant_menu),
             SizedBox(
-              width: 10,
+              width: 5,
             ),
-            Text('Food Recipe')
+            Text('Meal'),
           ],
         ),
       ),
-      body:_isLoading?Center(child: CircularProgressIndicator(),): ListView.builder(
-        itemCount: _recipes.length,
-        itemBuilder: (context, index) {
-          return RecipeCart(
-            title: _recipes[index].name,
-            cookTime: _recipes[index].totalTime,
-            rating: _recipes[index].rating.toString(),
-            thumbnailUrl:_recipes[index].images,);
-        },
+      body: Visibility(
+        visible: isLoding == false,
+        replacement: Center(
+          child: CircularProgressIndicator(),
+        ),
+        child: ListView.builder(
+          itemCount: mealList.length,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ShowMealInfo(
+                      title: mealList[index].strCategory.toString(),
+                      image: mealList[index].strCategoryThumb.toString(),
+                      ditails:
+                          mealList[index].strCategoryDescription.toString(),
+                    ),
+                  ),
+                );
+              },
+              child: RecipeCart(
+                title: mealList[index].strCategory,
+                thumbnailUrl: mealList[index].strCategoryThumb,
+              ),
+            );
+          },
+        ),
       ),
     );
+  }
+
+  Future<void> getData() async {
+    isLoding = true;
+    setState(() {});
+    Uri url =
+        Uri.parse('https://www.themealdb.com/api/json/v1/1/categories.php#');
+    Response response = await get(url);
+    if (response.statusCode == 200) {
+      var deocdedBody = jsonDecode(response.body);
+      var list = deocdedBody['categories'];
+      for (var item in list) {
+        Meal meal = Meal(
+          strCategory: item['strCategory'],
+          strCategoryThumb: item['strCategoryThumb'],
+          strCategoryDescription: item['strCategoryDescription'],
+        );
+        mealList.add(meal);
+      }
+      isLoding = false;
+      setState(() {});
+    }
+    setState(() {});
   }
 }

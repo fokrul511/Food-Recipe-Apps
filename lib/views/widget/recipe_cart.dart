@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 
 class RecipeCart extends StatelessWidget {
-  final String title;
-  final String rating;
-  final String cookTime;
-  final String thumbnailUrl;
+  String? title;
+  String? Discription;
+  String? thumbnailUrl;
 
-  const RecipeCart(
-      {super.key,
-      required this.title,
-      required this.rating,
-      required this.cookTime,
-      required this.thumbnailUrl});
+  RecipeCart({super.key, this.title, this.thumbnailUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +26,7 @@ class RecipeCart extends StatelessWidget {
         ],
         image: DecorationImage(
           image: NetworkImage(
-            thumbnailUrl,
+            thumbnailUrl??"",
           ),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
@@ -47,7 +41,7 @@ class RecipeCart extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.0),
               child: Text(
-                title,
+                title??"",
                 style: TextStyle(
                   fontSize: 19,
                 ),
@@ -77,7 +71,7 @@ class RecipeCart extends StatelessWidget {
                         size: 18,
                       ),
                       SizedBox(width: 7),
-                      Text(rating),
+                      Text('5'),
                     ],
                   ),
                 ),
@@ -96,7 +90,7 @@ class RecipeCart extends StatelessWidget {
                         size: 18,
                       ),
                       SizedBox(width: 7),
-                      Text(cookTime),
+                      Text('40 min'),
                     ],
                   ),
                 )
