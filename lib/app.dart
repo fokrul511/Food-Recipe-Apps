@@ -7,7 +7,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomeScreen(),
+      debugShowCheckedModeBanner: false,
+      title: 'Food Recipe',
+      theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          elevation: 3,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+        ),
+        primarySwatch: Colors.blue,
+        primaryColor: Colors.white,
+        textTheme: const TextTheme(
+          bodyMedium: TextStyle(color: Colors.white),
+        ),
+      ),
+      home: const HomeScreen(),
     );
   }
 }
